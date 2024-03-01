@@ -6,24 +6,38 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
+<h1>TEST</h1>
+<!-- J'ai écrit TEST ici afin de vérifier en temps réel si la page se rafraichissait
+en modifiant un peu TEST à chaque fois -->
+
 <body>
     <div id="chart_div"></div>
-    <script>
+    <script type="text/javascript">
         google.charts.load('current', {
             packages: ['corechart']
         });
-        google.charts.setOnLoadCallback(drawBackgroundColor);
+        google.charts.setOnLoadCallback(drawChart);
 
-        function drawBackgroundColor() {
-            function drawChart() {
-                var data = google.visualization.arrayToDataTable()
-                dataTable.addColumn('string', 'Date');
-                dataTable.addColumn('number', 'Valeur');
-                data.results.forEach(entry => {
-                    var date = new Date(entry.Jour * 1000);
-                    dataTable.addRow([date.toLocaleDateString(), entry.temp]);
-                });
+        function drawChart() {
+            function drawChart(data) {
+                var data = new google.visualization.arrayToDataTable(
+                    data.results.forEach(entry => {
+                        var date = new Date(entry.Jour * 1000);
+                        data.addColumn([date.toLocaleDateString(), entry.temp]);
+                    })
+                );
             }
+
+            var options = {
+                title: 'Température à Tawarano par jour.',
+                legend: {
+                    position: 'none'
+                },
+            };
+
+            var chart = new google.visualization.Historigram(document.getElementById('chart_div'));
+            chart.draw(data, options);
+
             // Récupération de données depuis notre API /tawarano/
             fetch('/tawarano/')
                 .then(response => response.json())
@@ -32,6 +46,8 @@
                 })
         }
     </script>
+
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
 </body>
 
 </html>

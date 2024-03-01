@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/contact/")
 def MaPremiereAPI():
-    return "<h2>Ma page de contact</h2>"
+    return render_template("contact.html")
 
 @app.route("/rapport/")
 def mongraphique():
@@ -18,6 +18,12 @@ def mongraphique():
 @app.route("/historigramme/")
 def historigramme():
     return render_template("historigramme.html")
+
+@app.route('/extract-minutes/<date_string>')
+def extract_minutes(date_string):
+        date_object = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%SZ')
+        minutes = date_object.minute
+        return jsonify({'minutes': minutes})
 
 @app.route('/tawarano/')
 def meteo():
@@ -31,9 +37,21 @@ def meteo():
         results.append({'Jour': dt_value, 'temp': temp_day_value})
     return jsonify(results=results)
 
+@app.route('/git/')
+def meteo():
+    response = urlopen('https://api.github.com/repos/Martin1335/5MCSI_Metriques/commits')
+    raw_content = response.read()
+    json_content = json.loads(raw_content.decode('utf-8'))
+    results = []
+    for list_element in json_content.get('list', []):#Changer d'où ça vient
+        date_of_commit = list_element.get('date')
+        commentaire = 0 #Get le commentaire
+        results.append({'Date': date_of_commit, 'temp': commentaire})
+    return jsonify(results=results)
+
 @app.route('/')
 def hello_world():
-    return render_template('hello.html') #Commentaire_random-allez-svp
+    return render_template('hello.html') #Commentaire
   
 if __name__ == "__main__":
   app.run(debug=True)
