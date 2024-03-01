@@ -15,7 +15,7 @@ def MaPremiereAPI():
 def mongraphique():
     return render_template("graphique.html")
 
-@app.route("/rapport/")
+@app.route("/historigramme/")
 def historigramme():
     return render_template("historigramme.html")
 
