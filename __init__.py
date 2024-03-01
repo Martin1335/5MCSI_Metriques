@@ -9,7 +9,7 @@ app = Flask(__name__)
                                                                                                                                        
 @app.route('/')
 def hello_world():
-    return render_template('hello.html') #Commentaire_random
+    return render_template('hello.html') #Commentaire_random-allez
   
 if __name__ == "__main__":
   app.run(debug=True)
