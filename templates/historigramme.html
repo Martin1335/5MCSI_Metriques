@@ -6,38 +6,35 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
-<h1>TEST</h1>
-<!-- J'ai écrit TEST ici afin de vérifier en temps réel si la page se rafraichissait
-en modifiant un peu TEST à chaque fois -->
-
 <body>
     <div id="chart_div"></div>
-    <script type="text/javascript">
+    <script>
         google.charts.load('current', {
             packages: ['corechart']
         });
-        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawBackgroundColor);
 
-        function drawChart() {
+        function drawBackgroundColor() {
             function drawChart(data) {
-                var data = new google.visualization.arrayToDataTable(
-                    data.results.forEach(entry => {
-                        var date = new Date(entry.Jour * 1000);
-                        data.addColumn([date.toLocaleDateString(), entry.temp]);
-                    })
-                );
+                // Convertir les données récupérées en un tableau utilisable par Google Charts
+                var dataTable = new google.visualization.DataTable();
+                dataTable.addColumn('string', 'Date');
+                dataTable.addColumn('number', 'Valeur');
+                data.results.forEach(entry => {
+                    var date = new Date(entry.Jour * 1000);
+                    dataTable.addRow([date.toLocaleDateString(), entry.temp]);
+                });
+                // Configurer les options du graphique en ligne
+                var options = {
+                    title: 'Évolution des températures de la ville de Tawarano',
+                    curveType: 'function',
+                    legend: {
+                        position: 'bottom'
+                    }
+                };
+                var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
+                chart.draw(dataTable, options);
             }
-
-            var options = {
-                title: 'Température à Tawarano par jour.',
-                legend: {
-                    position: 'none'
-                },
-            };
-
-            var chart = new google.visualization.Historigram(document.getElementById('chart_div'));
-            chart.draw(data, options);
-
             // Récupération de données depuis notre API /tawarano/
             fetch('/tawarano/')
                 .then(response => response.json())
@@ -46,8 +43,6 @@ en modifiant un peu TEST à chaque fois -->
                 })
         }
     </script>
-
-    <div id="chart_div" style="width: 900px; height: 500px;"></div>
 </body>
 
 </html>
