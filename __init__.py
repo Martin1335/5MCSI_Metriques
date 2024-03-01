@@ -38,7 +38,7 @@ def meteo():
     return jsonify(results=results)
 
 @app.route('/git/')
-def meteo():
+def meteooooo():
     response = urlopen('https://api.github.com/repos/Martin1335/5MCSI_Metriques/commits')
     raw_content = response.read()
     json_content = json.loads(raw_content.decode('utf-8'))
